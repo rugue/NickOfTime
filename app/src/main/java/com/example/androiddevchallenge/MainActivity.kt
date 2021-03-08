@@ -16,14 +16,24 @@
 package com.example.androiddevchallenge
 
 import android.os.Bundle
+import android.os.CountDownTimer
 import androidx.activity.compose.setContent
 import androidx.appcompat.app.AppCompatActivity
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.padding
+import androidx.compose.material.Button
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Surface
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.dp
 import com.example.androiddevchallenge.ui.theme.MyTheme
+import androidx.compose.runtime.*
 
 class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -40,9 +50,34 @@ class MainActivity : AppCompatActivity() {
 @Composable
 fun MyApp() {
     Surface(color = MaterialTheme.colors.background) {
-        Text(text = "Ready... Set... GO!")
+        var nums: Long by remember { mutableStateOf(10) }
+        var setView: String by remember { mutableStateOf("CountDown Start...") }
+        val countNum = object : CountDownTimer(10000, 1000) {
+
+            override fun onTick(millisUntilFinished: Long) {
+                nums = millisUntilFinished / 1000
+                setView = "$nums"
+            }
+
+            override fun onFinish() {
+                setView = "Finish"
+            }
+
+        }
+        //set design
+        Column(modifier = Modifier.padding(16.dp),
+        verticalArrangement = Arrangement.Center){
+            Text(text = setView,
+            modifier = Modifier.padding(bottom = 8.dp),
+            style = MaterialTheme.typography.h5)
+            Button(onClick = { countNum.start() }){
+                Text(text = "Start CountDown Numbers")
+            }
+        }
     }
 }
+
+
 
 @Preview("Light Theme", widthDp = 360, heightDp = 640)
 @Composable
